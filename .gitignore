@@ -1,0 +1,105 @@
+__pycache__/
+*.pyc
+*.log
+*.vscode/
+.env
+*.node
+*.json
+.md
+.txt
+.exe
+.toml
+.pyx
+.proj
+.js
+.wasm
+.pyi
+.yaml
+environments/
+.conda/
+.anaconda/
+.continuum/
+.condarc
+.dotnet/
+.ipynb_checkpoints/
+.idea/
+AppData/
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+.ini 
+
+Contacts/
+Apps-Juanfra/
+.ipython/
+.cache/
+NTUSER.DAT/
+/*.dat
+/.gitconfig
+/.lesshst
+*.dot
+NTUSER.DAT/
+.jpg
+.png
+.jpeg
+.gif
+.pdf
+.html
+.htm
+.xlsx
+.xml
+.xls 
+.pptx
+.ppt
+.docx
+.doc
+OneDrive/
+Downloads/
+Desktop/
+Music/
+Videos/
+Pictures/
+png 
+Documents/
+Projects/
+Backups/
+Logs/
+Temp/
+Build/
+Links/
+anaconda_projects/
+VirtualEnv/
+Searches/
+IntelGraphicsProfiles/
+MicrosoftEdgeBackups/
+.jupyterlabs/
+.jupyter/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*/env/
+*/venv/
+pip-wheel-metadata/
+.tox/
+.coverage
+.mypy_cache/
+.pytest_cache/
+site/
+build/
+dist/
+*.egg-info/
+.ipynb_checkpoints/
+
+# IDEs and OS
+.vscode/ # If you want to ignore VS Code settings
+.idea/ # IntelliJ/PyCharm
+.DS_Store # macOS
+Thumbs.db # Windows
+ehthumbs.db # Windows
+Desktop.ini # Windows
+.gitkeep # Optional: if you have empty folders you want to keep tracked
