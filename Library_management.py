@@ -7,13 +7,11 @@ class Book:
         self.year = Year          # Publication date
         self.isbn = ISBN          # ISBN code
         self.is_borrowed = False  # Initial book status, not borrowed
-
     def show_book_info(self):                                    # Method to display book information
         """Display book information."""
         status = "Borrowed" if self.is_borrowed else "Available" # Check if the book is borrowed
                                                                  # Print book details
         print(f"Title: {self.title}", f"\nAuthor: {self.author}", f"\nYear: {self.year}", f"\nISBN: {self.isbn}", f"\nStatus: {status}")
-
     def borrow(self):                               # Method to borrow a book
         """Borrow the book if it is available."""
         if self.is_borrowed:                        # Check if the book is already borrowed
@@ -21,7 +19,6 @@ class Book:
         else:                                       # If the book is available
             self.is_borrowed = True                 # Set book status to borrowed
             print("Libro prestado correctamente.")
-
     def return_book(self):                           # Method to return a borrowed book
         """Return the borrowed book."""
         if not self.is_borrowed:                     # Check if the book is not borrowed
@@ -53,6 +50,39 @@ class User:
         print(f"{self.name} devuelve el libro '{book_title}'.")
         return book_title
 
-book1 = Book("1984", "George Orwell", 1949, "1234567890") # First book instance
-book1.show_book_info()                                    # Display book information
+# Creation of Library class to manage books and users
+class Library: 
+    def __init__(self):
+        self.books = [] # List to store book instances
+        self.users = [] # List to store user instances
 
+    def add_book(self, book): # Method to add a book to the library
+        """Add a book to the library."""
+        self.books.append(book) # Add book to the library's book list
+        print(f"Libro añadido: {book.title}")
+
+    def add_user(self, user): # Method to add a user to the library
+        """Add a user to the library."""
+        self.users.append(user) # Add user to the library's user list
+        print(f"Usuario {user.name} registrado correctamente.")
+    def show_books(self): # Method to display all books in the library
+        """Display all books in the library."""
+        if not self.books: # Check if there are no books in the library
+            print("No hay libros en la biblioteca.")
+        else:
+            print("Libros en la biblioteca:")
+            for book in self.books:
+                book.show_book_info() # Display book information
+
+    def show_users(self): # Method to display all users in the library
+        """Display all users in the library."""
+        print("Usuarios registrados:")
+        for user in self.users:
+            print(f"    - {user.name} (ID: {user.user_id})")
+
+#my_library = Library() # Create an instance of the Library class
+#book1 = Book("1984", "George Orwell", 1949, "1234567890") # First book instance
+#book2 = Book("To Kill a Mockingbird", "Harper Lee", 1960, "0987654321") # Second book instance
+#my_library.add_book(book1)
+#my_library.add_book(book2)
+#my_library.show_books() # Function to display all books in the library
