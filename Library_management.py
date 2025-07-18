@@ -55,12 +55,10 @@ class Library:
     def __init__(self):
         self.books = [] # List to store book instances
         self.users = [] # List to store user instances
-
     def add_book(self, book): # Method to add a book to the library
         """Add a book to the library."""
         self.books.append(book) # Add book to the library's book list
         print(f"Libro añadido: {book.title}")
-
     def add_user(self, user): # Method to add a user to the library
         """Add a user to the library."""
         self.users.append(user) # Add user to the library's user list
@@ -73,7 +71,6 @@ class Library:
             print("Libros en la biblioteca:")
             for book in self.books:
                 book.show_book_info() # Display book information
-
     def show_users(self): # Method to display all users in the library
         """Display all users in the library."""
         print("Usuarios registrados:")
