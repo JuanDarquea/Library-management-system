@@ -77,9 +77,60 @@ class Library:
         for user in self.users:
             print(f"    - {user.name} (ID: {user.user_id})")
 
-#my_library = Library() # Create an instance of the Library class
-#book1 = Book("1984", "George Orwell", 1949, "1234567890") # First book instance
-#book2 = Book("To Kill a Mockingbird", "Harper Lee", 1960, "0987654321") # Second book instance
-#my_library.add_book(book1)
-#my_library.add_book(book2)
-#my_library.show_books() # Function to display all books in the library
+    def lend_book(self, book_title, user_id): # Method to lend a book to a user
+        """Lend a book to a user."""
+        book = next((b for b in self.books if b.title == book_title), None) # Find the book by title
+        if not book: # Check if the book exists in the library
+            print(f"El libro '{book_title}' no está disponible en la biblioteca.")
+            return # Exit the method if the book is not found
+        user = next((u for u in self.users if u.user_id == user_id), None) # Find the user by ID
+        if not user: # Check if the user exists in the library
+            print(f"El usuario con ID '{user_id}' no está registrado en la biblioteca.")
+            return # Exit the method if the user is not found
+        # Check if the book is already borrowed
+        if book.is_borrowed: 
+            print(f"El libro '{book_title}' ya está prestado.")
+        else: # If the book is available
+            book.is_borrowed = True # Set book status to borrowed
+            user.borrowed_books.append(book) # Add book to the user's borrowed books list
+            print(f"El libro '{book_title}' ha sido prestado a {user.name}.")
+    def return_book(self, book_title, user_id): # Method to return a borrowed book
+        """Return a borrowed book."""
+        user = next((u for u in self.users if u.user_id == user_id), None) # Find the user by ID
+        if not user: # Check if the user exists in the library
+            print(f"El usuario con ID '{user_id}' no está registrado en la biblioteca.")
+            return
+        book = next((b for b in user.borrowed_books if b.title == book_title), None) # Find the book in the user's borrowed books
+        if not book: # Check if the book is borrowed by the user
+            print(f"El libro '{book_title}' no está prestado a {user.name}.")
+            return
+        book.is_borrowed = False # Set book status to not borrowed
+        user.borrowed_books.remove(book) # Remove book from the user's borrowed books list
+        print(f"El libro '{book_title}' ha sido devuelto por {user.name}.")
+
+# Example usage of user classes and library management:
+user1 = User(1, "Ana garcia", "ana@email.com") # Create an instance of the User class
+user2 = User(2, "Luis Perez", "luis@email.com")
+user3 = User(3, "Maria Lopez", "maria@email.com")
+library = Library() # Create an instance of the Library class
+library.add_user(user1) # Add users to the library
+library.add_user(user2)
+library.add_user(user3)
+
+# Example usage of book classes and library management:
+book1 = Book("1984", "George Orwell", 1949, "1234567890") # Create an instance of the Book class
+book2 = Book("To Kill a Mockingbird", "Harper Lee", 1960, "0987654321")
+book3 = Book("El Principito", "Antoine de Saint-Exupéry", 1943, "1122334455")
+library.add_book(book1) # Add books to the library
+library.add_book(book2)
+library.add_book(book3)
+
+# Display all books and users in the library
+library.show_books() # Show all books in the library
+library.show_users() # Show all users in the library
+
+# Example of borrowing and returning books
+library.lend_book("1984", 1) # User 1 borrows "1984"
+library.lend_book("1984", 2) # User 2 tries to borrow "1984" (already borrowed)
+library.return_book("1984", 1) # User 1 returns "1984"
+library.lend_book("1984", 2) # User 2 borrows "1984" after it has been returned
