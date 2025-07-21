@@ -129,8 +129,8 @@ print()
 library.show_books() # Show all books in the library
 print()
 library.show_users() # Show all users in the library
-print()
 # Example of borrowing and returning books
+print()
 library.lend_book("1984", 1) # User 1 borrows "1984"
 library.lend_book("1984", 2) # User 2 tries to borrow "1984" (already borrowed)
 library.return_book("1984", 1) # User 1 returns "1984"
