@@ -12,6 +12,7 @@ class Book:
         status = "Borrowed" if self.is_borrowed else "Available" # Check if the book is borrowed
                                                                  # Print book details
         print(f"Title: {self.title}", f"\nAuthor: {self.author}", f"\nYear: {self.year}", f"\nISBN: {self.isbn}", f"\nStatus: {status}")
+        print("-" * 40)  # Separator line for better readability
     def borrow(self):                               # Method to borrow a book
         """Borrow the book if it is available."""
         if self.is_borrowed:                        # Check if the book is already borrowed
@@ -35,19 +36,19 @@ class User:
         self.borrowed_books = []  # List of borrowed books
     def show_user_info(self):     # Function to display user information
         """Display user information."""
-        print(f"Usuario: {self.name}", f"\nID usuario: {self.user_id}", f"\nCorreo: {self.email}")
+        print(f"\nUsuario: {self.name}", f"\nID usuario: {self.user_id}", f"\nCorreo: {self.email}")
         if self.borrowed_books:                                # Check if the user has borrowed books
-            print("Libros prestados:")
+            print("\nLibros prestados:")
             for book in self.borrowed_books:                   # Iterate through borrowed books
                 print(f"    - {book.title} de {book.author}")  # Display borrowed book details
         else:
             print("No tiene libros prestados actualmente")
     """Methods to (intention) request and return books, simulating user actions."""
     def request_book(self, book_title): # Method to request a book(intention to borrow)
-        print(f"{self.name} solicita el libro '{book_title}'.")
+        print(f"\n{self.name} solicita el libro '{book_title}'.")
         return book_title
     def return_book(self, book_title): # Method to return a book(intention to return)
-        print(f"{self.name} devuelve el libro '{book_title}'.")
+        print(f"\n{self.name} devuelve el libro '{book_title}'.")
         return book_title
 
 # Creation of Library class to manage books and users
@@ -66,17 +67,16 @@ class Library:
     def show_books(self): # Method to display all books in the library
         """Display all books in the library."""
         if not self.books: # Check if there are no books in the library
-            print("No hay libros en la biblioteca.")
+            print("\nNo hay libros en la biblioteca.")
         else:
-            print("Libros en la biblioteca:")
+            print("\nLibros en la biblioteca:")
             for book in self.books:
                 book.show_book_info() # Display book information
     def show_users(self): # Method to display all users in the library
         """Display all users in the library."""
-        print("Usuarios registrados:")
+        print("\nUsuarios registrados:")
         for user in self.users:
             print(f"    - {user.name} (ID: {user.user_id})")
-
     def lend_book(self, book_title, user_id): # Method to lend a book to a user
         """Lend a book to a user."""
         book = next((b for b in self.books if b.title == book_title), None) # Find the book by title
@@ -109,14 +109,14 @@ class Library:
         print(f"El libro '{book_title}' ha sido devuelto por {user.name}.")
 
 # Example usage of user classes and library management:
-user1 = User(1, "Ana garcia", "ana@email.com") # Create an instance of the User class
-user2 = User(2, "Luis Perez", "luis@email.com")
-user3 = User(3, "Maria Lopez", "maria@email.com")
+user1 = User(1, "Ana García", "ana@email.com") # Create an instance of the User class
+user2 = User(2, "Luis Pérez", "luis@email.com")
+user3 = User(3, "María López", "maria@email.com")
 library = Library() # Create an instance of the Library class
 library.add_user(user1) # Add users to the library
 library.add_user(user2)
 library.add_user(user3)
-
+print()
 # Example usage of book classes and library management:
 book1 = Book("1984", "George Orwell", 1949, "1234567890") # Create an instance of the Book class
 book2 = Book("To Kill a Mockingbird", "Harper Lee", 1960, "0987654321")
@@ -124,11 +124,12 @@ book3 = Book("El Principito", "Antoine de Saint-Exupéry", 1943, "1122334455")
 library.add_book(book1) # Add books to the library
 library.add_book(book2)
 library.add_book(book3)
-
+print()
 # Display all books and users in the library
 library.show_books() # Show all books in the library
+print()
 library.show_users() # Show all users in the library
-
+print()
 # Example of borrowing and returning books
 library.lend_book("1984", 1) # User 1 borrows "1984"
 library.lend_book("1984", 2) # User 2 tries to borrow "1984" (already borrowed)
