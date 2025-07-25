@@ -1,4 +1,12 @@
 # Library management system - Book, library and user management classes (Object Oriented Programming)
+import tkinter as tk # Importing tkinter for GUI elements
+from tkinter import simpledialog # Importing simpledialog for user input dialogs
+from tkinter import messagebox # Importing messagebox for displaying messages
+
+# Creation of main window for the library management system
+root =tk.Tk() # Create the main window
+root.title("Library Management System") # Set the title of the window
+root.geometry("400x400") # Set the size of the window
 
 class Book:
     def __init__(self, Title, Author, Year, ISBN): # Constructor to initialize book attributes
@@ -58,6 +66,14 @@ class Library:
         self.users = [] # List to store user instances
     def add_book(self, book): # Method to add a book to the library
         """Add a book to the library."""
+        messagebox.showinfo("Add Book", f"Adding book: {book.title}", "Instance to add a book to the library.") # Show message box with book title
+        if any(b.title == book.title for b in self.books): # Check if the book already exists in the library
+            print(f"The book '{book.title}' already exists in the library.")
+            return # Exit the method if the book is already in the library
+        if not isinstance(book, Book): # Check if the book is an instance of the Book class
+            print("Invalid book object. Please provide a valid Book instance.")
+            return # Exit the method if the book is not valid
+        # If the book is valid and does not exist in the library
         self.books.append(book) # Add book to the library's book list
         print(f"The book '{book.title}' has been added to the library.")
     def add_user(self, user): # Method to add a user to the library
