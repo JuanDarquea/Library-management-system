@@ -214,7 +214,7 @@ def open_form_add_book():
         author = author_entry.get()
         year = year_entry.get()
         isbn = isbn_entry.get()
-        if not title or not author or not year or not isbn:
+        if not title or not author or not year.isdigit() or not isbn:
             messagebox.showerror("Error", "Please fill in all fields.")
             return
         new_book = Book(title, author, year, isbn)
@@ -243,15 +243,135 @@ def open_form_add_user():
     def save():
         user_id = user_id_entry.get()
         name = name_entry.get()
-        email_entry = email_entry.get()
-        if not user_id or not name or not email_entry:
+        email = email_entry.get()
+        if not user_id.isdigit() or not name or not email:
             messagebox.showerror("Error", "Please fill in all fields.")
             return
-        new_user = User(user_id, name, email_entry)
+        new_user = User(user_id, name, email)
         library.add_user(new_user)
         messagebox.showinfo("Success", f"User '{name}' added successfully.")
         window.destroy()
 
+    tk.Button(window, text = "Save", command = save).pack(pady = 5)
+    tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
+
+def open_form_remove_book():
+    window = tk.Toplevel(root)
+    window.title = tk.Entry(window)
+    window.geometry("300x230")
+
+    tk.Label(window, text = "Title:").pack_slaves
+    title_entry = tk.Entry(window)
+    title_entry.pack()
+    tk.Label(window, text = "Author:").pack()
+    author_entry = tk.Entry(window)
+    author_entry.pack()
+    tk.Label(window, text = "Year:").pack()
+    year_entry = tk.Entry(window)
+    year_entry.pack()
+    tk.Label(window, text = "ISBN:").pack()
+    isbn_entry = tk.Entry(window)
+    isbn_entry.pack()
+
+    def save():
+        title = title_entry.get()
+        author = author.get()
+        year = year_entry.get()
+        isbn = isbn_entry.get()
+        if not title or not author or not year.isdigit() or not isbn:
+            messagebox.showerror("Error", "Please fill in all fields.")
+            return
+          
+    tk.Button(window, text = "Save", command = save).pack(pady = 5)
+    tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
+
+def open_form_remove_user():
+    window = tk.Toplevel(root)
+    window.title = tk.Entry(window)
+    window.geometry("300x230")
+
+    tk.Label(window, text = "ID:").pack_slaves
+    user_id_entry = tk.Entry(window)
+    user_id_entry.pack()
+    tk.Label(window, text = "Name:").pack()
+    name_entry = tk.Entry(window)
+    name_entry.pack()
+    tk.Label(window, text = "Email:").pack()
+    email_entry = tk.Entry(window)
+    email_entry.pack()
+
+    def save():
+        user_id = user_id_entry.get()
+        name = name_entry.get()
+        email = email_entry.get()
+        if not user_id.isdigit() or not name or not email:
+            messagebox.showerror("Error", "Please fill in all fields.")
+            return
+        new_user = User(user_id, name, email)
+        library.add_user(new_user)
+        messagebox.showinfo("Success", f"User '{name}' added successfully.")
+        window.destroy()
+
+    tk.Button(window, text = "Save", command = save).pack(pady = 5)
+    tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
+
+def open_form_lend_book():
+    window = tk.Toplevel(root)
+    window.title = tk.Entry(window)
+    window.geometry("300x230")
+
+    tk.Label(window, text = "Title:").pack_slaves
+    title_entry = tk.Entry(window)
+    title_entry.pack()
+    tk.Label(window, text = "Author:").pack()
+    author_entry = tk.Entry(window)
+    author_entry.pack()
+    tk.Label(window, text = "Year:").pack()
+    year_entry = tk.Entry(window)
+    year_entry.pack()
+    tk.Label(window, text = "ISBN:").pack()
+    isbn_entry = tk.Entry(window)
+    isbn_entry.pack()
+
+    def save():
+        title = title_entry.get()
+        author = author.get()
+        year = year_entry.get()
+        isbn = isbn_entry.get()
+        if not title or not author or not year.isdigit() or not isbn:
+            messagebox.showerror("Error", "Please fill in all fields.")
+            return
+          
+    tk.Button(window, text = "Save", command = save).pack(pady = 5)
+    tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
+
+def open_form_return_book():
+    window = tk.Toplevel(root)
+    window.title = tk.Entry(window)
+    window.geometry("300x230")
+
+    tk.Label(window, text = "Title:").pack_slaves
+    title_entry = tk.Entry(window)
+    title_entry.pack()
+    tk.Label(window, text = "Author:").pack()
+    author_entry = tk.Entry(window)
+    author_entry.pack()
+    tk.Label(window, text = "Year:").pack()
+    year_entry = tk.Entry(window)
+    year_entry.pack()
+    tk.Label(window, text = "ISBN:").pack()
+    isbn_entry = tk.Entry(window)
+    isbn_entry.pack()
+
+    def save():
+        title = title_entry.get()
+        author = author.get()
+        year = year_entry.get()
+        isbn = isbn_entry.get()
+        if not title or not author or not year.isdigit() or not isbn:
+            messagebox.showerror("Error", "Please fill in all fields.")
+            return
+          
     tk.Button(window, text = "Save", command = save).pack(pady = 5)
     tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
 
