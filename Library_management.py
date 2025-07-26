@@ -68,7 +68,7 @@ class Library:
         """Add a book to the library."""
         window_book =tk.Toplevel(root) # Create a new window for adding a book
         window_book.title("Add Book") # Set the title of the window
-        window_book.geometry("300x200") # Set the size of the window
+        window_book.geometry("320x300") # Set the size of the window
 
         tk.Label(window_book, text = "Title:").pack() # Label for book title input
         title_entry = tk.Entry(window_book) # Entry field for book title
@@ -83,7 +83,7 @@ class Library:
         isbn_entry = tk.Entry(window_book) # Entry field for book ISBN
         isbn_entry.pack() # Pack the ISBN entry field
 
-        messagebox.showinfo("Add Book", f"Adding book: {book.title}", "Instance to add a book to the library.") # Show message box with book title
+        messagebox.showinfo("Add Book", f"Adding book: {book.title}") # Show message box with book title
         if any(b.title == book.title for b in self.books): # Check if the book already exists in the library
             print(f"The book '{book.title}' already exists in the library.")
             return # Exit the method if the book is already in the library
@@ -97,23 +97,20 @@ class Library:
         """Remove a book from the library."""
         book = next((b for b in self.books if b.title == book_title), None) # Find the book by title
         if not book: # Check if the book exists in the library
-            print(f"The book '{book_title}' does not exist in the library.")
+            messagebox.showerror("ERROR", f"The book '{book_title}' does not exist in the library.")
             return # Exit the method if the book is not found
-        self.books.remove(book) # Remove book from the library's book list
-        print(f"The book '{book.title}' has been removed from the library.")
-        messagebox.showinfo("Remove Book", f"Removing book: {book.title}", "Instance to remove a book from the library.") # Show message box with book title
         # Check if the book is borrowed
         if book.is_borrowed: # If the book is borrowed
-            print(f"The book '{book.title}' is currently borrowed and cannot be removed.")
+            messagebox.showwarning("WARNING",f"The book '{book.title}' is currently borrowed and cannot be removed.")
             return # Exit the method if the book is borrowed
         # If the book is not borrowed, it can be removed
         self.books.remove(book) # Remove book from the library's book list
-        print(f"The book '{book.title}' has been removed from the library.")
+        messagebox.showinfo(f"Removing book: {book.title}", f"The book has been removed successfully from the library.") # Show message box with book title
     def add_user(self, user): # Method to add a user to the library
         """Add a user to the library."""
         self.users.append(user) # Add user to the library's user list
         print(f"User {user.name} registered successfully.")
-        messagebox.showinfo("Add User", f"User {user.name} registered successfully.", "Instance to add a user to the library.") # Show message box with user name
+        messagebox.showinfo("Add User", f"User {user.name} registered successfully.") # Show message box with user name
         # Check if the user already exists in the library
         if any(u.user_id == user.user_id for u in self.users): # Check if the user ID already exists
             print(f"The user with ID '{user.user_id}' already exists in the library.")
@@ -125,18 +122,15 @@ class Library:
         """Remove a user from the library."""
         user = next((u for u in self.users if u.user_id == user_id), None) # Find the user by ID
         if not user: # Check if the user exists in the library
-            print(f"The user with ID '{user_id}' does not exist in the library.")
+            messagebox.showerror("ERROR", f"The user {user.name} with ID '{user_id}' does not exist in the library.")
             return # Exit the method if the user is not found
-        self.users.remove(user) # Remove user from the library's user list
-        print(f"The user {user.name} has been removed from the library.")
-        messagebox.showinfo("Remove User", f"Removing user: {user.name}", "Instance to remove a user from the library.") # Show message box with user name  
         # Check if the user has borrowed books
         if user.borrowed_books: # If the user has borrowed books
-            print(f"The user {user.name} has borrowed books and cannot be removed.")
+            messagebox.showwarning("WARNING", f"The user {user.name} with ID '{user_id}' has borrowed books and cannot be removed.")
             return # Exit the method if the user has borrowed books
         # If the user has no borrowed books, they can be removed
         self.users.remove(user) # Remove user from the library's user list
-        print(f"The user {user.name} has been removed from the library.")
+        messagebox.showinfo(f"Removing user: {user.name}", "The user has been removed successfully from the library.") # Show message box with user name
     def show_books(self): # Method to display all books in the library
         """Display all books in the library."""
         # Iterate through the books and display their information
@@ -146,13 +140,13 @@ class Library:
             print("\nBooks in the library:")
             for book in self.books:
                 book.show_book_info() # Display book information
-        messagebox.showinfo("Show Books", "Displaying all books in the library.", "Instance to show all books in the library.") # Show message box indicating books are displayed
+        messagebox.showinfo("Show Books", "Displaying all books in the library.") # Show message box indicating books are displayed
     def show_users(self): # Method to display all users in the library
         """Display all users in the library."""
         print("\nRegistered users:")
         for user in self.users:
             print(f"    - {user.name} (ID: {user.user_id})")
-        messagebox.showinfo("Show Users", "Displaying all registered users in the library.", "Instance to show all users in the library.") # Show message box indicating users are displayed
+        messagebox.showinfo("Show Users", "Displaying all registered users in the library.") # Show message box indicating users are displayed
     def lend_book(self, book_title, user_id): # Method to lend a book to a user
         """Lend a book to a user."""
         book = next((b for b in self.books if b.title == book_title), None) # Find the book by title
@@ -170,7 +164,7 @@ class Library:
             book.is_borrowed = True # Set book status to borrowed
             user.borrowed_books.append(book) # Add book to the user's borrowed books list
             print(f"The book '{book_title}' has been lent to {user.name}.")
-            messagebox.showinfo("Lend Book", f"Lending book: {book.title} to {user.name}", "Instance to lend a book to a registered user.") # Show message box with book title and user name
+            messagebox.showinfo("Lend Book", f"Lending book: {book.title} to {user.name}") # Show message box with book title and user name
             # Update the library's book inventory
             self.books.remove(book) # Remove book from the library's book list
             print(f"The book '{book.title}' has been removed from the library's inventory.")
@@ -187,7 +181,7 @@ class Library:
         book.is_borrowed = False # Set book status to not borrowed
         user.borrowed_books.remove(book) # Remove book from the user's borrowed books list
         print(f"The book '{book_title}' has been returned by {user.name}.")
-        messagebox.showinfo("Return Book", f"Returning book: {book.title}", "Instance to return a book to the library.") # Show message box with book title
+        messagebox.showinfo("Return Book", f"Returning book: {book.title}") # Message box to return a book
         # Update the library's book inventory
         self.books.append(book)
 
@@ -375,42 +369,72 @@ def open_form_return_book():
     tk.Button(window, text = "Save", command = save).pack(pady = 5)
     tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
 
+def show_books():
+    window = tk.Toplevel(root)
+    window.title("Books in Library")
+    window.geometry("300x230")
+    
+    text = tk.Text(window)
+    text.pack(expand = True, fill = "both")
+    if not Library.books:
+        text.insert(tk.END, "There are no books available in library.\n")
+    else:
+        for book in Library.books:
+            state = "Borrowed" if book.is_borrowed else "Available"
+            text.insert(tk.END, f"{book.title} by {book.author} ({book.year}) - {state}\n")
+            text.config(state = "Disabled")
+
+def show_users():
+    window = tk.Toplevel(root)
+    window.title("Library Users")
+    window.geometry("300x230")
+
+    text = tk.Text(window)
+    text.pack(expand = True, fill = "both")
+    if not Library.users:
+        text.insert(tk.END, "There are no registered users in library.\n")
+    else:
+        for user in Library.show_users:
+            text.insert(tk.END, f"{user.name} (ID: {user.user_id})")
+            text.config(state = "Disabled")
+                        
+
 
 library = Library() # Create an instance of the Library class
-tk.Button(root, text="Agregar Libro", command = Library.add_book, width=30).pack(pady=5)
-tk.Button(root, text="Quitar Libro", command = Library.remove_book, width=30).pack(pady=5)
-tk.Button(root, text="Agregar Usuario", command = Library.add_user, width=30).pack(pady=5)
-tk.Button(root, text="Quitar Usuario", command = Library.remove_user, width=30).pack(pady=5)
-tk.Button(root, text="Hacer Préstamo", command = Library.lend_book, width=30).pack(pady=5)
-tk.Button(root, text="Hacer Devolución", command = Library.return_book, width=30).pack(pady=5)
-tk.Button(root, text="Mostrar Libros", command = Library.show_books, width=30).pack(pady=5)
-tk.Button(root, text="Mostrar Usuarios", command = Library.show_users, width=30).pack(pady=5)
+tk.Button(root, text="Add Book", command = open_form_add_book, width=30).pack(pady=5)
+tk.Button(root, text="Remove Book", command = open_form_remove_book, width=30).pack(pady=5)
+tk.Button(root, text="Add User", command = open_form_add_user, width=30).pack(pady=5)
+tk.Button(root, text="Remove User", command = open_form_remove_user, width=30).pack(pady=5)
+tk.Button(root, text="Lend Book", command = open_form_lend_book, width=30).pack(pady=5)
+tk.Button(root, text="Return Book", command = open_form_return_book, width=30).pack(pady=5)
+tk.Button(root, text="Show Books", command = show_books, width=30).pack(pady=5)
+tk.Button(root, text="Show Users", command = show_users, width=30).pack(pady=5)
 root.mainloop() # Start the main event loop of the GUI
 
 # Example usage of user classes and library management:
-user1 = User(1, "Ana García", "ana@email.com") # Create an instance of the User class
-user2 = User(2, "Luis Pérez", "luis@email.com")
-user3 = User(3, "María López", "maria@email.com")
-library = Library() # Create an instance of the Library class
-library.add_user(user1) # Add users to the library
-library.add_user(user2)
-library.add_user(user3)
-print()
+#user1 = User(1, "Ana García", "ana@email.com") # Create an instance of the User class
+#user2 = User(2, "Luis Pérez", "luis@email.com")
+#user3 = User(3, "María López", "maria@email.com")
+#library = Library() # Create an instance of the Library class
+#library.add_user(user1) # Add users to the library
+#library.add_user(user2)
+#library.add_user(user3)
+#print()
 # Example usage of book classes and library management:
-book1 = Book("1984", "George Orwell", 1949, "1234567890") # Create an instance of the Book class
-book2 = Book("To Kill a Mockingbird", "Harper Lee", 1960, "0987654321")
-book3 = Book("El Principito", "Antoine de Saint-Exupéry", 1943, "1122334455")
-library.add_book(book1) # Add books to the library
-library.add_book(book2)
-library.add_book(book3)
-print()
+#book1 = Book("1984", "George Orwell", 1949, "1234567890") # Create an instance of the Book class
+#book2 = Book("To Kill a Mockingbird", "Harper Lee", 1960, "0987654321")
+#book3 = Book("El Principito", "Antoine de Saint-Exupéry", 1943, "1122334455")
+#library.add_book(book1) # Add books to the library
+#ibrary.add_book(book2)
+#library.add_book(book3)
+#print()
 # Display all books and users in the library
-library.show_books() # Show all books in the library
-print()
-library.show_users() # Show all users in the library
+#library.show_books() # Show all books in the library
+#print()
+#library.show_users() # Show all users in the library
 # Example of borrowing and returning books
-print()
-library.lend_book("1984", 1) # User 1 borrows "1984"
-library.lend_book("1984", 2) # User 2 tries to borrow "1984" (already borrowed)
-library.return_book("1984", 1) # User 1 returns "1984"
-library.lend_book("1984", 2) # User 2 borrows "1984" after it has been returned
+#print()
+#library.lend_book("1984", 1) # User 1 borrows "1984"
+#ibrary.lend_book("1984", 2) # User 2 tries to borrow "1984" (already borrowed)
+#library.return_book("1984", 1) # User 1 returns "1984"
+#library.lend_book("1984", 2) # User 2 borrows "1984" after it has been returned
