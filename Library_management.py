@@ -73,142 +73,138 @@ class Library:
 
     def add_book(self, book): # Method to add a book to the library
         """Add a book to the library."""
-        window_book =tk.Toplevel(root) # Create a new window for adding a book
-        window_book.title("Add Book") # Set the title of the window
-        window_book.geometry("320x300") # Set the size of the window
-
-        tk.Label(window_book, text = "Title:").pack() # Label for book title input
-        title_entry = tk.Entry(window_book) # Entry field for book title
-        title_entry.pack() # Pack the title entry field
-        tk.Label(window_book, text = "Author:").pack() # Label for book author input
-        author_entry = tk.Entry(window_book) # Entry field for book author
-        author_entry.pack() # Pack the author entry field
-        tk.Label(window_book, text = "Year:").pack() # Label for book year input
-        year_entry = tk.Entry(window_book) # Entry field for book year
-        year_entry.pack() # Pack the year entry field
-        tk.Label(window_book, text = "ISBN:").pack() # Label for book ISBN input
-        isbn_entry = tk.Entry(window_book) # Entry field for book ISBN
-        isbn_entry.pack() # Pack the ISBN entry field
-
-        if any(b.title == book.title for b in self.books): # Check if the book already exists in the library
-            messagebox.showwarning("WARNING", f"The book '{book.title}' already exists in the library.")
-            return # Exit the method if the book is already in the library
+        # Check if the book already exists in the library
+        if any(b.title == book.title for b in self.books):
+            # Exit the method if the book is already in the library
+            return False, "The book already exists in the library." 
         
         if not isinstance(book, Book): # Check if the book is an instance of the Book class
-            messagebox.showerror("ERROR", "Invalid book object. Please provide a valid Book instance.")
-            return # Exit the method if the book is not valid
-        # If the book is valid and does not exist in the library
+            # Exit the method if the book is not a valid instance
+            return False, "Invalid book object. Please provide a valid Book instance."
+        
+        # If the book is valid, add it to the library's book list
         self.books.append(book) # Add book to the library's book list
-        messagebox.showinfo(f"Adding book: {book.title}", f"The book '{book.title}' has been added to the library.")
+        # Show success message with book title
+        return True, f"The Book '{book.title}' was added successfully to the library."
 
     def remove_book(self, book_title): # Method to remove a book from the library
         """Remove a book from the library."""
-        book = next((b for b in self.books if b.title == book_title), None) # Find the book by title
+        # Find the book by title
+        book = next((b for b in self.books if b.title == book_title), None)
         if not book: # Check if the book exists in the library
-            messagebox.showerror("ERROR", f"The book '{book_title}' does not exist in the library.")
-            return # Exit the method if the book is not found
+            # Exit the method if the book is not found
+            return False, "The book is not found in the library."
         
         # Check if the book is borrowed
         if book.is_borrowed: # If the book is borrowed
-            messagebox.showwarning("WARNING",f"The book '{book.title}' is currently borrowed and cannot be removed.")
-            return # Exit the method if the book is borrowed
+            # Exit the method if the book is borrowed
+            return False, "The book is borrowed already and cannot be removed." 
         
         # If the book is not borrowed, it can be removed
         self.books.remove(book) # Remove book from the library's book list
-        messagebox.showinfo(f"Removing book: {book.title}", f"The book has been removed successfully from the library.") # Show message box with book title
+        # Show success message
+        return True, f"The book has been removed successfully from the library." 
+
     def add_user(self, user): # Method to add a user to the library
         """Add a user to the library."""
         # Check if the user already exists in the library
-        if any(u.user_id == user.user_id for u in self.users): # Check if the user ID already exists
-            messagebox.showwarning("WARNING", f"The user with ID '{user.user_id}' already exists in the library.")
-            return # Exit the method if the user already exists
+        if any(u.user_id == user.user_id for u in self.users):
+            # Exit the method if the user already exists
+            return False, f"The user with ID '{user.user_id}' already exists in the library." 
         
-        if not isinstance(user, User): # Check if the user is an instance of the User class
-            messagebox.showerror("ERROR", "Invalid user object. Please provide a valid User instance.")
-            return
+        # Check if the user is an instance of the User class
+        if not isinstance(user, User): 
+            # Exit the method if the user is not a valid instance
+            return False, "Invalid user object. Please provide a valid User instance."
         
         self.users.append(user) # Add user to the library's user list
-        messagebox.showinfo(f"Registering User: {user.name}", f"User {user.name} with ID '{user.user_id}' registered successfully.") # Show message box with user name
+        # Show success message with users name and ID
+        return True, f"User {user.name} with ID '{user.user_id}' registered successfully."
 
     def remove_user(self, user_id): # Method to remove a user from the library
         """Remove a user from the library."""
-        user = next((u for u in self.users if u.user_id == user_id), None) # Find the user by ID
+        # Find the user by ID
+        user = next((u for u in self.users if u.user_id == user_id), None) 
         if not user: # Check if the user exists in the library
-            messagebox.showerror("ERROR", f"The user {user.name} with ID '{user_id}' does not exist in the library.")
-            return # Exit the method if the user is not found
+            # Exit the method if the user is not found
+            return False, f"The user {user.name} with ID '{user_id}' does not exist in the library." 
+        
         # Check if the user has borrowed books
-
         if user.borrowed_books: # If the user has borrowed books
-            messagebox.showwarning("WARNING", f"The user {user.name} with ID '{user_id}' has borrowed books and cannot be removed.")
-            return # Exit the method if the user has borrowed books
+            # Exit the method if the user has borrowed books
+            return False, f"The user {user.name} with ID '{user_id}' has borrowed books and cannot be removed."
+        
         # If the user has no borrowed books, they can be removed
         self.users.remove(user) # Remove user from the library's user list
-        messagebox.showinfo(f"Removing user: {user.name}", "The user has been removed successfully from the library.") # Show message box with user name
+        # Show success message with user name
+        return True, f"The user {user.name} with ID '{user_id} has been removed successfully from the library." 
 
     def show_books(self): # Method to display all books in the library
         """Display all books in the library."""
         # Iterate through the books and display their information
         if not self.books: # Check if there are no books in the library
-            print("\nNo books available in the library.")
+            return False, "No books available in the library."
         else:
-            print("\nBooks in the library:")
             for book in self.books:
-                book.show_book_info() # Display book information
-        messagebox.showinfo("Show Books", "Displaying all books in the library.") # Show message box indicating books are displayed
+                return True, book.show_book_info() # Display book information
 
     def show_users(self): # Method to display all users in the library
         """Display all users in the library."""
-        print("\nRegistered users:")
         for user in self.users:
-            print(f"    - {user.name} (ID: {user.user_id})")
-        messagebox.showinfo("Show Users", "Displaying all registered users in the library.") # Show message box indicating users are displayed
+            return True, user.show_user_info() # Display user information
+        else:
+            return False, "No registered users in the library." # If no users are registered
 
     def lend_book(self, book_title, user_id): # Method to lend a book to a user
         """Lend a book to a user."""
-        book = next((b for b in self.books if b.title == book_title), None) # Find the book by title
+        # Find the book by title
+        book = next((b for b in self.books if b.title == book_title), None) 
         if not book: # Check if the book exists in the library
-            messagebox.showerror("ERROR", f"The book '{book_title}' is not available in the library.")
-            return # Exit the method if the book is not found
-        user = next((u for u in self.users if u.user_id == user_id), None) # Find the user by ID
-
+            # Exit the method if the book is not found
+            return False, f"The book '{book_title}' is not available in the library."
+        
+        # Find the user by ID
+        user = next((u for u in self.users if str(u.user_id) == str(user_id)), None)
         if not user: # Check if the user exists in the library
-            messagebox.showerror("ERROR", f"The user with ID '{user_id}' is not registered in the library.")
-            return # Exit the method if the user is not found
+            # Exit the method if the user is not found
+            return False, f"The user with ID '{user_id}' is not registered in the library."
+        
         # Check if the book is already borrowed
-
         if book.is_borrowed: 
-            messagebox.showwarning("WARNING", f"The book '{book_title}' is already borrowed.")
+            return False, f"The book '{book_title}' is already borrowed."
         else: # If the book is available
             book.is_borrowed = True # Set book status to borrowed
-            user.borrowed_books.append(book) # Add book to the user's borrowed books list
-            messagebox.showinfo("Lend Book", f"Lending book: {book.title} to {user.name}") # Show message box with book title and user name
-            # Update the library's book inventory
-            #self.books.remove(book) # Remove book from the library's book list
-            #messagebox.showinfo(f"The book '{book.title}' has been removed from the library's inventory.")
+            # Add book to the user's borrowed books list
+            user.borrowed_books.append(book) 
+            # Show success message with book title and user name
+            return True, f"The book '{book.title}' has been borrowed to {user.name}"
 
     def return_book(self, book_title, user_id): # Method to return a borrowed book
         """Return a borrowed book."""
-        user = next((u for u in self.users if u.user_id == user_id), None) # Find the user by ID
+        # Find the user by ID
+        user = next((u for u in self.users if u.user_id == user_id), None) 
         if not user: # Check if the user exists in the library
-            messagebox.showerror("ERROR", f"The user {user.name} with ID '{user.user_id}' is not registered in the library.")
-            return
-        book = next((b for b in user.borrowed_books if b.title == book_title), None) # Find the book in the user's borrowed books
+            # Show message with error if user doesn't exist
+            return False, f"The user {user.name} with ID '{user.user_id}' is not registered in the library."
+        
+        # Find the book in the user's borrowed books
+        book = next((b for b in user.borrowed_books if b.title == book_title), None) 
         if not book: # Check if the book is borrowed by the user
-            messagebox.showwarning("WARNING", f"The book '{book.book_title}' is not borrowed by {user.name}.")
-            return
+            # Show message with error if book is not borrowed by the user
+            return False, f"The book '{book.book_title}' is not borrowed by {user.name}."
+        
         book.is_borrowed = False # Set book status to not borrowed
-        user.borrowed_books.remove(book) # Remove book from the user's borrowed books list
-        messagebox.showinfo("Book Returned Successfully", f"The book '{book.book_title}' has been returned by {user.name}.") # Message box to return a book
-        # Update the library's book inventory
-        #self.books.append(book)
-        #messagebox.showinfo(f"The book '{book.title}' has been returned to the library")
+        # Remove book from the user's borrowed books list
+        user.borrowed_books.remove(book)
+        # Message box to return a book
+        return True, f"The book '{book.book_title}' has been returned by {user.name}."
 
 def open_form_add_book():
     window = tk.Toplevel(root)
     window.title = tk.Entry(window)
     window.geometry("300x230")
 
-    tk.Label(window, text = "Title:").pack_slaves
+    tk.Label(window, text = "Title:").pack()
     title_entry = tk.Entry(window)
     title_entry.pack()
     tk.Label(window, text = "Author:").pack()
@@ -222,18 +218,21 @@ def open_form_add_book():
     isbn_entry.pack()
 
     def save():
-        title = title_entry.get()
-        author = author_entry.get()
-        year = year_entry.get()
-        isbn = isbn_entry.get()
+        title = title_entry.get().strip()
+        author = author_entry.get().strip()
+        year = year_entry.get().strip()
+        isbn = isbn_entry.get().strip()
 
         if not title or not author or not year.isdigit() or not isbn:
             messagebox.showerror("Error", "Please fill in all fields.")
             return
         
         new_book = Book(title, author, year, isbn)
-        library.add_book(new_book)
-        messagebox.showinfo("Success", f"Book '{title}' added successfully.")
+        success, msg = library.add_book(new_book)
+        if success:
+            messagebox.showinfo("Success", f"Book '{title}' added successfully.")
+        else:
+            messagebox.showwarning("Warning", f"Book '{title}' already exists in the library.")
         window.destroy()
 
     tk.Button(window, text = "Save", command = save).pack(pady = 5)
@@ -244,7 +243,7 @@ def open_form_add_user():
     window.title = tk.Entry(window)
     window.geometry("300x230")
 
-    tk.Label(window, text = "ID:").pack_slaves
+    tk.Label(window, text = "ID:").pack()
     user_id_entry = tk.Entry(window)
     user_id_entry.pack()
     tk.Label(window, text = "Name:").pack()
@@ -255,9 +254,9 @@ def open_form_add_user():
     email_entry.pack()
 
     def save():
-        user_id = user_id_entry.get()
-        name = name_entry.get()
-        email = email_entry.get()
+        user_id = user_id_entry.get().strip()
+        name = name_entry.get().strip()
+        email = email_entry.get().strip()
 
         if not user_id.isdigit() or not name or not email:
             messagebox.showerror("Error", "Please fill in all fields.")
@@ -276,7 +275,7 @@ def open_form_remove_book():
     window.title = tk.Entry(window)
     window.geometry("300x230")
 
-    tk.Label(window, text = "Title:").pack_slaves
+    tk.Label(window, text = "Title:").pack()
     title_entry = tk.Entry(window)
     title_entry.pack()
     tk.Label(window, text = "Author:").pack()
@@ -306,7 +305,7 @@ def open_form_remove_user():
     window.title = tk.Entry(window)
     window.geometry("300x230")
 
-    tk.Label(window, text = "ID:").pack_slaves
+    tk.Label(window, text = "ID:").pack()
     user_id_entry = tk.Entry(window)
     user_id_entry.pack()
     tk.Label(window, text = "Name:").pack()
@@ -334,74 +333,68 @@ def open_form_remove_user():
 def open_form_lend_book():
     window = tk.Toplevel(root)
     window.title = tk.Entry(window)
-    window.geometry("300x230")
+    window.geometry("300x150")
 
-    tk.Label(window, text = "Title:").pack_slaves
+    tk.Label(window, text = "Book Title:").pack()
     title_entry = tk.Entry(window)
     title_entry.pack()
-    tk.Label(window, text = "Author:").pack()
-    author_entry = tk.Entry(window)
-    author_entry.pack()
-    tk.Label(window, text = "Year:").pack()
-    year_entry = tk.Entry(window)
-    year_entry.pack()
-    tk.Label(window, text = "ISBN:").pack()
-    isbn_entry = tk.Entry(window)
-    isbn_entry.pack()
+    tk.Label(window, text = "User ID:").pack()
+    user_id_entry = tk.Entry(window)
+    user_id_entry.pack()
 
-    def save():
-        title = title_entry.get()
-        author = author.get()
-        year = year_entry.get()
-        isbn = isbn_entry.get()
-        if not title or not author or not year.isdigit() or not isbn:
+    def lend():
+        title = title_entry.get().strip()
+        user_id = user_id_entry.get().strip()
+        if not title or not user_id.isdigit():
             messagebox.showerror("Error", "Please fill in all fields.")
             return
+        success, msg = library.lend_book(title, int(user_id))
+        if success:
+            messagebox.showinfo("Success", msg)
+        else:
+            messagebox.showerror("Error", msg)
           
-    tk.Button(window, text = "Save", command = save).pack(pady = 5)
+    tk.Button(window, text = "Lend", command = lend).pack(pady = 5)
     tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
 
 def open_form_return_book():
     window = tk.Toplevel(root)
     window.title = tk.Entry(window)
-    window.geometry("300x230")
+    window.geometry("300x150")
 
-    tk.Label(window, text = "Title:").pack_slaves
+    tk.Label(window, text = "Book Title:").pack()
     title_entry = tk.Entry(window)
     title_entry.pack()
-    tk.Label(window, text = "Author:").pack()
-    author_entry = tk.Entry(window)
-    author_entry.pack()
-    tk.Label(window, text = "Year:").pack()
-    year_entry = tk.Entry(window)
-    year_entry.pack()
-    tk.Label(window, text = "ISBN:").pack()
-    isbn_entry = tk.Entry(window)
-    isbn_entry.pack()
+    tk.Label(window, text = "User ID:").pack()
+    user_id_entry = tk.Entry(window)
+    user_id_entry.pack()
 
-    def save():
-        title = title_entry.get()
-        author = author.get()
-        year = year_entry.get()
-        isbn = isbn_entry.get()
-        if not title or not author or not year.isdigit() or not isbn:
+    def return_book():
+        title = title_entry.get().strip()
+        user_id = user_id_entry.get().strip()
+        if not title or not user_id.isdigit():
             messagebox.showerror("Error", "Please fill in all fields.")
             return
+        success, msg = library.return_book(title, int(user_id))
+        if success:
+            messagebox.showinfo("Success", msg)
+        else:
+            messagebox.showerror("Error", msg)
           
-    tk.Button(window, text = "Save", command = save).pack(pady = 5)
+    tk.Button(window, text = "Return Book", command = return_book).pack(pady = 5)
     tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
 
 def show_books():
     window = tk.Toplevel(root)
     window.title("Books in Library")
-    window.geometry("300x230")
+    window.geometry("400x300")
     
     text = tk.Text(window)
     text.pack(expand = True, fill = "both")
-    if not Library.books:
+    if not library.books:
         text.insert(tk.END, "There are no books available in library.\n")
     else:
-        for book in Library.books:
+        for book in library.books:
             state = "Borrowed" if book.is_borrowed else "Available"
             text.insert(tk.END, f"{book.title} by {book.author} ({book.year}) - {state}\n")
             text.config(state = "Disabled")
@@ -409,15 +402,19 @@ def show_books():
 def show_users():
     window = tk.Toplevel(root)
     window.title("Library Users")
-    window.geometry("300x230")
+    window.geometry("350x300")
 
     text = tk.Text(window)
     text.pack(expand = True, fill = "both")
-    if not Library.users:
+    if not library.users:
         text.insert(tk.END, "There are no registered users in library.\n")
     else:
-        for user in Library.show_users:
-            text.insert(tk.END, f"{user.name} (ID: {user.user_id})")
+        for user in library.users:
+            text.insert(tk.END, f"{user.name} (ID: {user.user_id}) - Email: {user.email}\n")
+            if user.borrowed_books:
+                text.insert(tk.END, "  Borrowed books:\n")
+                for book in user.borrowed_books:
+                    text.insert(tk.END, f"    - {book.title} by {book.author}\n")
             text.config(state = "Disabled")
                         
 
