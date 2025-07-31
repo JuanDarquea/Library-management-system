@@ -124,20 +124,20 @@ class Library:
     def remove_user(self, user_id): # Method to remove a user from the library
         """Remove a user from the library."""
         # Find the user by ID
-        user = next((u for u in self.users if u.user_id == user_id), None) 
+        user = next((u for u in self.users if str(u.user_id) == str(user_id)), None)
         if not user: # Check if the user exists in the library
             # Exit the method if the user is not found
-            return False, f"The user {user.name} with ID '{user_id}' does not exist in the library." 
+            return False, f"The user with ID '{user_id}' does not exist in the library." 
         
         # Check if the user has borrowed books
         if user.borrowed_books: # If the user has borrowed books
             # Exit the method if the user has borrowed books
-            return False, f"The user {user.name} with ID '{user_id}' has borrowed books and cannot be removed."
+            return False, f"The user with ID '{user_id}' has borrowed books and cannot be removed."
         
         # If the user has no borrowed books, they can be removed
         self.users.remove(user) # Remove user from the library's user list
         # Show success message with user name
-        return True, f"The user {user.name} with ID '{user_id} has been removed successfully from the library." 
+        return True, f"The user {user.name} with ID '{user_id}' has been removed successfully from the library."
 
     def show_books(self): # Method to display all books in the library
         """Display all books in the library."""
@@ -182,26 +182,26 @@ class Library:
     def return_book(self, book_title, user_id): # Method to return a borrowed book
         """Return a borrowed book."""
         # Find the user by ID
-        user = next((u for u in self.users if u.user_id == user_id), None) 
+        user = next((u for u in self.users if str(u.user_id) == str(user_id)), None)
         if not user: # Check if the user exists in the library
             # Show message with error if user doesn't exist
-            return False, f"The user {user.name} with ID '{user.user_id}' is not registered in the library."
+            return False, f"The user with ID '{user_id}' is not registered in the library."
         
         # Find the book in the user's borrowed books
         book = next((b for b in user.borrowed_books if b.title == book_title), None) 
         if not book: # Check if the book is borrowed by the user
             # Show message with error if book is not borrowed by the user
-            return False, f"The book '{book.book_title}' is not borrowed by {user.name}."
+            return False, f"The book '{book_title}' is not borrowed by the user."
         
         book.is_borrowed = False # Set book status to not borrowed
         # Remove book from the user's borrowed books list
         user.borrowed_books.remove(book)
         # Message box to return a book
-        return True, f"The book '{book.book_title}' has been returned by {user.name}."
+        return True, f"The book '{book_title}' has been returned by the user '{user.name}'."
 
 def open_form_add_book():
     window = tk.Toplevel(root)
-    window.title = tk.Entry(window)
+    window.title("Add Book")
     window.geometry("300x230")
 
     tk.Label(window, text = "Title:").pack()
@@ -226,7 +226,8 @@ def open_form_add_book():
         if not title or not author or not year.isdigit() or not isbn:
             messagebox.showerror("Error", "Please fill in all fields.")
             return
-        
+        window.destroy()
+        # Create a new book instance with the provided details
         new_book = Book(title, author, year, isbn)
         success, msg = library.add_book(new_book)
         if success:
@@ -240,7 +241,7 @@ def open_form_add_book():
 
 def open_form_add_user():
     window = tk.Toplevel(root)
-    window.title = tk.Entry(window)
+    window.title("Add User")
     window.geometry("300x230")
 
     tk.Label(window, text = "ID:").pack()
@@ -261,7 +262,8 @@ def open_form_add_user():
         if not user_id.isdigit() or not name or not email:
             messagebox.showerror("Error", "Please fill in all fields.")
             return
-        
+        window.destroy()
+        # Create a new user instance with the provided details
         new_user = User(user_id, name, email)
         library.add_user(new_user)
         messagebox.showinfo("Success", f"User '{name}' added successfully.")
@@ -272,67 +274,62 @@ def open_form_add_user():
 
 def open_form_remove_book():
     window = tk.Toplevel(root)
-    window.title = tk.Entry(window)
-    window.geometry("300x230")
+    window.title("Remove Book")
+    window.geometry("300x120")
 
     tk.Label(window, text = "Title:").pack()
     title_entry = tk.Entry(window)
     title_entry.pack()
-    tk.Label(window, text = "Author:").pack()
-    author_entry = tk.Entry(window)
-    author_entry.pack()
-    tk.Label(window, text = "Year:").pack()
-    year_entry = tk.Entry(window)
-    year_entry.pack()
-    tk.Label(window, text = "ISBN:").pack()
-    isbn_entry = tk.Entry(window)
-    isbn_entry.pack()
+
 
     def save():
-        title = title_entry.get()
-        author = author.get()
-        year = year_entry.get()
-        isbn = isbn_entry.get()
-        if not title or not author or not year.isdigit() or not isbn:
-            messagebox.showerror("Error", "Please fill in all fields.")
+        title = title_entry.get().strip()
+        if not title:
+            messagebox.showerror("Error", "Please enter the book title.")
             return
+        success, msg = library.remove_book(title)
+        if success:
+            messagebox.showinfo("Success", msg)
+        else:
+            messagebox.showerror("Error", msg)
+        library.remove_book(title) # Remove book from the library
+        window.destroy()    
           
-    tk.Button(window, text = "Save", command = save).pack(pady = 5)
+    tk.Button(window, text = "Remove", command = save).pack(pady = 5)
     tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
 
 def open_form_remove_user():
     window = tk.Toplevel(root)
-    window.title = tk.Entry(window)
-    window.geometry("300x230")
+    window.title("Remove User")
+    window.geometry("300x120")
 
-    tk.Label(window, text = "ID:").pack()
+    tk.Label(window, text = "User ID:").pack()
     user_id_entry = tk.Entry(window)
     user_id_entry.pack()
-    tk.Label(window, text = "Name:").pack()
-    name_entry = tk.Entry(window)
-    name_entry.pack()
-    tk.Label(window, text = "Email:").pack()
-    email_entry = tk.Entry(window)
-    email_entry.pack()
 
-    def save():
-        user_id = user_id_entry.get()
-        name = name_entry.get()
-        email = email_entry.get()
-        if not user_id.isdigit() or not name or not email:
-            messagebox.showerror("Error", "Please fill in all fields.")
+
+    def remove():        
+        """Function to remove a user from the library."""
+        user_id = user_id_entry.get().strip()
+        if not user_id.isdigit():
+            messagebox.showerror("Error", "Please enter a valid User ID.")
             return
-        new_user = User(user_id, name, email)
-        library.add_user(new_user)
-        messagebox.showinfo("Success", f"User '{name}' added successfully.")
+        success, msg = library.remove_user(str(user_id))
+        if success:
+            messagebox.showinfo("Success", msg)
+        else:
+            messagebox.showerror("Error", msg)
+            window.destroy()
+        # Remove user from the library
+        library.remove_user(str(user_id))
         window.destroy()
 
-    tk.Button(window, text = "Save", command = save).pack(pady = 5)
+    tk.Button(window, text = "Remove", command = remove).pack(pady = 5)
     tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
 
 def open_form_lend_book():
     window = tk.Toplevel(root)
-    window.title = tk.Entry(window)
+    window.title("Lend Book")
     window.geometry("300x150")
 
     tk.Label(window, text = "Book Title:").pack()
@@ -346,20 +343,23 @@ def open_form_lend_book():
         title = title_entry.get().strip()
         user_id = user_id_entry.get().strip()
         if not title or not user_id.isdigit():
-            messagebox.showerror("Error", "Please fill in all fields.")
+            messagebox.showerror("Error", "Please fill in all fields correctly.")
             return
-        success, msg = library.lend_book(title, int(user_id))
+        window.destroy()
+        # Lend the book to the user
+        success, msg = library.lend_book(title, str(user_id))
         if success:
             messagebox.showinfo("Success", msg)
         else:
             messagebox.showerror("Error", msg)
+        window.destroy()
           
     tk.Button(window, text = "Lend", command = lend).pack(pady = 5)
     tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
 
 def open_form_return_book():
     window = tk.Toplevel(root)
-    window.title = tk.Entry(window)
+    window.title("Return Book")
     window.geometry("300x150")
 
     tk.Label(window, text = "Book Title:").pack()
@@ -375,11 +375,13 @@ def open_form_return_book():
         if not title or not user_id.isdigit():
             messagebox.showerror("Error", "Please fill in all fields.")
             return
-        success, msg = library.return_book(title, int(user_id))
+        # Return the borrowed book
+        success, msg = library.return_book(title, str(user_id))
         if success:
             messagebox.showinfo("Success", msg)
         else:
             messagebox.showerror("Error", msg)
+        window.destroy()
           
     tk.Button(window, text = "Return Book", command = return_book).pack(pady = 5)
     tk.Button(window, text = "Cancel", command = window.destroy).pack(pady = 5)
@@ -397,7 +399,7 @@ def show_books():
         for book in library.books:
             state = "Borrowed" if book.is_borrowed else "Available"
             text.insert(tk.END, f"{book.title} by {book.author} ({book.year}) - {state}\n")
-            text.config(state = "Disabled")
+            text.config(state = "disabled")
 
 def show_users():
     window = tk.Toplevel(root)
@@ -415,7 +417,7 @@ def show_users():
                 text.insert(tk.END, "  Borrowed books:\n")
                 for book in user.borrowed_books:
                     text.insert(tk.END, f"    - {book.title} by {book.author}\n")
-            text.config(state = "Disabled")
+            text.config(state = "disabled")
                         
 
 
@@ -429,31 +431,3 @@ tk.Button(root, text="Return Book", command = open_form_return_book, width=30).p
 tk.Button(root, text="Show Books", command = show_books, width=30).pack(pady=5)
 tk.Button(root, text="Show Users", command = show_users, width=30).pack(pady=5)
 root.mainloop() # Start the main event loop of the GUI
-
-# Example usage of user classes and library management:
-#user1 = User(1, "Ana García", "ana@email.com") # Create an instance of the User class
-#user2 = User(2, "Luis Pérez", "luis@email.com")
-#user3 = User(3, "María López", "maria@email.com")
-#library = Library() # Create an instance of the Library class
-#library.add_user(user1) # Add users to the library
-#library.add_user(user2)
-#library.add_user(user3)
-#print()
-# Example usage of book classes and library management:
-#book1 = Book("1984", "George Orwell", 1949, "1234567890") # Create an instance of the Book class
-#book2 = Book("To Kill a Mockingbird", "Harper Lee", 1960, "0987654321")
-#book3 = Book("El Principito", "Antoine de Saint-Exupéry", 1943, "1122334455")
-#library.add_book(book1) # Add books to the library
-#ibrary.add_book(book2)
-#library.add_book(book3)
-#print()
-# Display all books and users in the library
-#library.show_books() # Show all books in the library
-#print()
-#library.show_users() # Show all users in the library
-# Example of borrowing and returning books
-#print()
-#library.lend_book("1984", 1) # User 1 borrows "1984"
-#ibrary.lend_book("1984", 2) # User 2 tries to borrow "1984" (already borrowed)
-#library.return_book("1984", 1) # User 1 returns "1984"
-#library.lend_book("1984", 2) # User 2 borrows "1984" after it has been returned
