@@ -7,15 +7,8 @@ from tkinter import messagebox # Importing messagebox for displaying messages
 root =tk.Tk() # Create the main window
 root.title("Library Management System") # Set the title of the window
 root.geometry("400x400") # Set the size of the window
-import tkinter as tk # Importing tkinter for GUI elements
-from tkinter import simpledialog # Importing simpledialog for user input dialogs
-from tkinter import messagebox # Importing messagebox for displaying messages
 
-# Creation of main window for the library management system
-root =tk.Tk() # Create the main window
-root.title("Library Management System") # Set the title of the window
-root.geometry("400x400") # Set the size of the window
-
+# Creation of Book class to manage book attributes and methods
 class Book:
     def __init__(self, Title, Author, Year, ISBN): # Constructor to initialize book attributes
         self.title = Title        # Title atribute
