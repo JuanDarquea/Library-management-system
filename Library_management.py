@@ -208,7 +208,7 @@ class Library:
         # Find the user by ID
         user = next((u for u in self.users if str(u.user_id) == str(user_id)), None)
             # Exit the method if the book is not found
-            return False, f"The book '{book_title}' is not available in the library."
+        return False, f"The book '{book_title}' is not available in the library."
         
         # Find the user by ID
         user = next((u for u in self.users if str(u.user_id) == str(user_id)), None)
@@ -248,7 +248,7 @@ class Library:
         # Find the book in the user's borrowed books
         book = next((b for b in user.borrowed_books if b.title == book_title), None) 
             # Show message with error if user doesn't exist
-            return False, f"The user with ID '{user_id}' is not registered in the library."
+        return False, f"The user with ID '{user_id}' is not registered in the library."
         
         # Find the book in the user's borrowed books
         book = next((b for b in user.borrowed_books if b.title == book_title), None) 
