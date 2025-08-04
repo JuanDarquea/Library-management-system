@@ -7,6 +7,14 @@ from tkinter import messagebox # Importing messagebox for displaying messages
 root =tk.Tk() # Create the main window
 root.title("Library Management System") # Set the title of the window
 root.geometry("400x400") # Set the size of the window
+import tkinter as tk # Importing tkinter for GUI elements
+from tkinter import simpledialog # Importing simpledialog for user input dialogs
+from tkinter import messagebox # Importing messagebox for displaying messages
+
+# Creation of main window for the library management system
+root =tk.Tk() # Create the main window
+root.title("Library Management System") # Set the title of the window
+root.geometry("400x400") # Set the size of the window
 
 class Book:
     def __init__(self, Title, Author, Year, ISBN): # Constructor to initialize book attributes
@@ -16,12 +24,14 @@ class Book:
         self.isbn = ISBN          # ISBN code
         self.is_borrowed = False  # Initial book status, not borrowed
 
+
     def show_book_info(self):                                    # Method to display book information
         """Display book information."""
         status = "Borrowed" if self.is_borrowed else "Available" # Check if the book is borrowed
                                                                  # Print book details
         print(f"Title: {self.title}", f"\nAuthor: {self.author}", f"\nYear: {self.year}", f"\nISBN: {self.isbn}", f"\nStatus: {status}")
         print("-" * 40)  # Separator line for better readability
+
 
     def borrow(self):                               # Method to borrow a book
         """Borrow the book if it is available."""
@@ -30,6 +40,7 @@ class Book:
         else:                                       # If the book is available
             self.is_borrowed = True                 # Set book status to borrowed
             print("Book borrowed successfully.")
+
 
     def return_book(self):                           # Method to return a borrowed book
         """Return the borrowed book."""
@@ -46,6 +57,7 @@ class User:
         self.email = Email
         self.borrowed_books = []  # List of borrowed books
 
+
     def show_user_info(self):     # Function to display user information
         """Display user information."""
         print(f"\nUser: {self.name}", f"\nUser ID: {self.user_id}", f"\nEmail: {self.email}")
@@ -57,9 +69,11 @@ class User:
             print("No borrowed books at the moment.")
     """Methods to (intention) request and return books, simulating user actions."""
 
+
     def request_book(self, book_title): # Method to request a book(intention to borrow)
         print(f"\n{self.name} requests the book '{book_title}'.")
         return book_title
+
 
     def return_book(self, book_title): # Method to return a book(intention to return)
         print(f"\n{self.name} returns the book '{book_title}'.")
@@ -71,10 +85,21 @@ class Library:
         self.books = [] # List to store book instances
         self.users = [] # List to store user instances
 
+
     def add_book(self, book): # Method to add a book to the library
         """Add a book to the library."""
         # Check if the book already exists in the library
         if any(b.title == book.title and b.author == book.author for b in self.books):
+            # Exit the method if the book is already in the library
+            return False, "The book already exists in the library." 
+        
+        if not isinstance(book, Book): # Check if the book is an instance of the Book class
+            # Exit the method if the book is not a valid instance
+            return False, "Invalid book object. Please provide a valid Book instance."
+        
+        # If the book is valid, add it to the library's book list
+        # Check if the book already exists in the library
+        if any(b.title == book.title for b in self.books):
             # Exit the method if the book is already in the library
             return False, "The book already exists in the library." 
         
@@ -108,6 +133,16 @@ class Library:
 
     def add_user(self, user): # Method to add a user to the library
         """Add a user to the library."""
+        # Check if the user already exists in the library
+        if any(u.user_id == user.user_id for u in self.users):
+            # Exit the method if the user already exists
+            return False, f"The user with ID '{user.user_id}' already exists in the library." 
+        
+        # Check if the user is an instance of the User class
+        if not isinstance(user, User): 
+            # Exit the method if the user is not a valid instance
+            return False, "Invalid user object. Please provide a valid User instance."
+        
         # Check if the user already exists in the library
         if any(u.user_id == user.user_id for u in self.users):
             # Exit the method if the user already exists
@@ -164,7 +199,14 @@ class Library:
         """Lend a book to a user."""
         # Find the book by title
         book = next((b for b in self.books if b.title == book_title), None) 
+        # Find the book by title
+        book = next((b for b in self.books if b.title == book_title), None) 
         if not book: # Check if the book exists in the library
+            # Exit the method if the book is not found
+            return False, f"The book '{book_title}' is not available in the library."
+        
+        # Find the user by ID
+        user = next((u for u in self.users if str(u.user_id) == str(user_id)), None)
             # Exit the method if the book is not found
             return False, f"The book '{book_title}' is not available in the library."
         
@@ -174,11 +216,20 @@ class Library:
             # Exit the method if the user is not found
             return False, f"The user with ID '{user_id}' is not registered in the library."
         
+            # Exit the method if the user is not found
+            return False, f"The user with ID '{user_id}' is not registered in the library."
+        
         # Check if the book is already borrowed
         if book.is_borrowed: 
             return False, f"The book '{book_title}' is already borrowed."
+            return False, f"The book '{book_title}' is already borrowed."
         else: # If the book is available
             book.is_borrowed = True # Set book status to borrowed
+            # Add book to the user's borrowed books list
+            user.borrowed_books.append(book) 
+            # Show success message with book title and user name
+            return True, f"The book '{book.title}' has been borrowed to {user.name}"
+
             # Add book to the user's borrowed books list
             user.borrowed_books.append(book) 
             # Show success message with book title and user name
@@ -188,13 +239,23 @@ class Library:
         """Return a borrowed book."""
         # Find the user by ID
         user = next((u for u in self.users if str(u.user_id) == str(user_id)), None)
+        # Find the user by ID
+        user = next((u for u in self.users if str(u.user_id) == str(user_id)), None)
         if not user: # Check if the user exists in the library
             # Show message with error if user doesn't exist
             return False, f"The user with ID '{user_id}' is not registered in the library."
         
         # Find the book in the user's borrowed books
         book = next((b for b in user.borrowed_books if b.title == book_title), None) 
+            # Show message with error if user doesn't exist
+            return False, f"The user with ID '{user_id}' is not registered in the library."
+        
+        # Find the book in the user's borrowed books
+        book = next((b for b in user.borrowed_books if b.title == book_title), None) 
         if not book: # Check if the book is borrowed by the user
+            # Show message with error if book is not borrowed by the user
+            return False, f"The book '{book_title}' is not borrowed by the user."
+        
             # Show message with error if book is not borrowed by the user
             return False, f"The book '{book_title}' is not borrowed by the user."
         
